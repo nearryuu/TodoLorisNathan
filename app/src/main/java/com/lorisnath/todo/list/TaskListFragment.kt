@@ -27,13 +27,13 @@ class TaskListFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_task_list, container, false)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    {
+        val rootView = inflater.inflate(R.layout.fragment_task_list, container, false)
         adapter.currentList = taskList
+        // Inflate the layout for this fragment
+        return rootView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
