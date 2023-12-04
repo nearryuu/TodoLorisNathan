@@ -5,8 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.lorisnath.todo.R
+import java.util.UUID
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -19,13 +23,31 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class TaskListFragment : Fragment() {
-    private var taskList = listOf("Task 1", "Task 2", "Task 3")
+    //private var taskList = listOf("Task 1", "Task 2", "Task 3")
+    private var taskList = listOf(
+        Task(id = "id_1", title = "Task 1", description = "description 1"),
+        Task(id = "id_2", title = "Task 2"),
+        Task(id = "id_3", title = "Task 3")
+    )
     private val adapter = TaskListAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
+
+        //var button = view?.findViewById(R.id.floatingActionButton) as FloatingActionButton
+
+/*
+        button.setOnClickListener{
+
+            val newTask = Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}")
+            taskList = taskList + newTask
+            adapter.currentList = taskList
+            adapter.notifyDataSetChanged()
+            */
+       // }
     }
+
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
@@ -39,6 +61,14 @@ class TaskListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler)
         recyclerView.adapter = adapter
+        var button : FloatingActionButton = view.findViewById(R.id.floatingActionButton)
+        button.setOnClickListener {
+            val newTask =
+                Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}")
+            taskList = taskList + newTask
+            adapter.currentList = taskList
+            adapter.notifyDataSetChanged()
+        }
     }
 
     companion object {
