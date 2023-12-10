@@ -5,11 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.lorisnath.todo.R
+import com.lorisnath.todo.databinding.FragmentTaskListBinding
 import java.util.UUID
 
 // TODO: Rename parameter arguments, choose names that match
@@ -30,6 +28,9 @@ class TaskListFragment : Fragment() {
         Task(id = "id_3", title = "Task 3")
     )
     private val adapter = TaskListAdapter()
+    private var _binding: FragmentTaskListBinding? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -49,26 +50,30 @@ class TaskListFragment : Fragment() {
     }
 
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-    {
-        val rootView = inflater.inflate(R.layout.fragment_task_list, container, false)
-        adapter.currentList = taskList
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentTaskListBinding.inflate(inflater, container, false)
+        // adapter.currentList = taskList
         // Inflate the layout for this fragment
-        return rootView
+        return _binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler)
-        recyclerView.adapter = adapter
-        var button : FloatingActionButton = view.findViewById(R.id.floatingActionButton)
-        button.setOnClickListener {
+        val recyclerView = _binding?.recycler
+        recyclerView?.adapter = adapter
+        adapter.submitList(taskList)
+        val button : FloatingActionButton? = _binding?.floatingActionButton
+        button?.setOnClickListener {
             val newTask =
                 Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}")
             taskList = taskList + newTask
-            adapter.currentList = taskList
-            adapter.notifyDataSetChanged()
+            adapter.submitList(taskList)
         }
+
+
     }
 
     companion object {
