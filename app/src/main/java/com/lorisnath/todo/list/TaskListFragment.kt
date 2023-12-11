@@ -31,7 +31,7 @@ class TaskListFragment : Fragment() {
     )
     private val adapter = TaskListAdapter()
     private var _binding: FragmentTaskListBinding? = null
-    val intent = Intent(context, DetailActivity::class.java)
+    //val intent = Intent(context, DetailActivity::class.java)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +78,7 @@ class TaskListFragment : Fragment() {
         adapter.submitList(taskList)
         val button : FloatingActionButton? = _binding?.floatingActionButton
         button?.setOnClickListener {
-            startActivity(intent)
+            //startActivity(intent)
             val newTask =
                 Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}")
             taskList = taskList + newTask
