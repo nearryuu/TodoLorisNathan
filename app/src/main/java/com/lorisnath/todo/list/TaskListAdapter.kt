@@ -23,20 +23,15 @@ object MyItemsDiffCallback : DiffUtil.ItemCallback<Task>() {
 class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(MyItemsDiffCallback) {
 
     // on utilise `inner` ici afin d'avoir accès aux propriétés de l'adapter directement
-    // Déclaration de la variable lambda dans l'adapter:
-    var onClickDelete: (Task) -> Unit = {}
-
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private var textView : TextView = itemView.findViewById(R.id.task_title)
         private var descView : TextView = itemView.findViewById(R.id.task_description)
-        private var deleteButton : TextView = itemView.findViewById(R.id.deleteButton)
 
         fun bind(taskTitle: Task) {
             // on affichera les données ici
             textView.text = taskTitle.title
             descView.text = taskTitle.description
-            deleteButton.setOnClickListener {onClickDelete(taskTitle)}
         }
     }
 
