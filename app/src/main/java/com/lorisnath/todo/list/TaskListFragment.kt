@@ -1,5 +1,6 @@
 package com.lorisnath.todo.list
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.lorisnath.todo.R
 import com.lorisnath.todo.databinding.FragmentTaskListBinding
+import com.lorisnath.todo.detail.DetailActivity
 import java.util.UUID
 
 // TODO: Rename parameter arguments, choose names that match
@@ -29,6 +31,7 @@ class TaskListFragment : Fragment() {
     )
     private val adapter = TaskListAdapter()
     private var _binding: FragmentTaskListBinding? = null
+    val intent = Intent(context, DetailActivity::class.java)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,9 +67,18 @@ class TaskListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val recyclerView = _binding?.recycler
         recyclerView?.adapter = adapter
+        adapter.onClickDelete = { task ->
+            /*
+            taskList = taskList.subList(0, taskList.indexOf(task)-1) + taskList.subList(taskList.indexOf(task)+ 1, taskList.size - 1)
+            adapter.submitList(taskList)
+             */
+            taskList = taskList.minus(task)
+            adapter.submitList(taskList)
+        }
         adapter.submitList(taskList)
         val button : FloatingActionButton? = _binding?.floatingActionButton
         button?.setOnClickListener {
+            startActivity(intent)
             val newTask =
                 Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}")
             taskList = taskList + newTask
