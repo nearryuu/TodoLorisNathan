@@ -6,8 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.lorisnath.todo.R
 import com.lorisnath.todo.databinding.FragmentTaskListBinding
 import com.lorisnath.todo.detail.DetailActivity
 import java.util.UUID
@@ -31,7 +31,13 @@ class TaskListFragment : Fragment() {
     )
     private val adapter = TaskListAdapter()
     private var _binding: FragmentTaskListBinding? = null
-    //val intent = Intent(context, DetailActivity::class.java)
+    val createTask = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        // dans cette callback on récupèrera la task et on l'ajoutera à la liste
+        val task = result.data?.getSerializableExtra("task") as Task?
+        taskList = taskList + task!!
+        adapter.submitList(taskList)
+    }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +73,7 @@ class TaskListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val recyclerView = _binding?.recycler
         recyclerView?.adapter = adapter
+
         adapter.onClickDelete = { task ->
             /*
             taskList = taskList.subList(0, taskList.indexOf(task)-1) + taskList.subList(taskList.indexOf(task)+ 1, taskList.size - 1)
@@ -78,11 +85,9 @@ class TaskListFragment : Fragment() {
         adapter.submitList(taskList)
         val button : FloatingActionButton? = _binding?.floatingActionButton
         button?.setOnClickListener {
-            //startActivity(intent)
-            val newTask =
-                Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}")
-            taskList = taskList + newTask
-            adapter.submitList(taskList)
+            var intent = Intent(context, DetailActivity::class.java)
+            createTask.launch(intent)
+
         }
 
 
