@@ -1,5 +1,6 @@
 package com.lorisnath.todo.detail
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,6 +29,14 @@ import java.util.UUID
 class DetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        var task = intent.getSerializableExtra("previousTask") as Task?
+        if (intent?.action == Intent.ACTION_SEND) {
+            if ("text/plain" == intent.type){
+                if (task == null){
+                    task = Task(id = UUID.randomUUID().toString(), title = "New Task !", description = intent.getStringExtra(Intent.EXTRA_TEXT)!!)
+                }
+            }
+        }
         setContent {
             TodoLorisNathanTheme {
                 // A surface container using the 'background' color from the theme
@@ -35,7 +44,7 @@ class DetailActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Detail(onValidate =  {newTask ->
+                    Detail(task, onValidate =  {newTask ->
                         intent.putExtra("task", newTask)
                         setResult(RESULT_OK, intent)
                         finish()
@@ -49,8 +58,9 @@ class DetailActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Detail( modifier: Modifier = Modifier, onValidate: (Task) -> Unit) {
-    var task by remember { mutableStateOf(Task(id = UUID.randomUUID().toString(), title = "New Task !")) }
+fun Detail( initialTask : Task?, modifier: Modifier = Modifier, onValidate: (Task) -> Unit) {
+    var newTask = Task(id = UUID.randomUUID().toString(), title = "New Task !")
+    var task by remember { mutableStateOf(initialTask ?: newTask) }
     Column {
         modifier.padding(16.dp)
         Arrangement.spacedBy(16.dp)
@@ -83,6 +93,6 @@ fun Detail( modifier: Modifier = Modifier, onValidate: (Task) -> Unit) {
 @Composable
 fun DetailPreview() {
     TodoLorisNathanTheme {
-        Detail(onValidate = {})
+        Detail(Task(id = UUID.randomUUID().toString(), title = "New Task !"), onValidate = {})
     }
 }

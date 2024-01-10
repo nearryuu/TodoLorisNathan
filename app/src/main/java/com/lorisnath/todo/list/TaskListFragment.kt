@@ -29,7 +29,32 @@ class TaskListFragment : Fragment() {
         Task(id = "id_2", title = "Task 2"),
         Task(id = "id_3", title = "Task 3")
     )
-    private val adapter = TaskListAdapter()
+
+
+    val adapterListener : TaskListListener = object : TaskListListener {
+        override fun onClickDelete(task: Task) {
+            taskList = taskList.minus(task)
+            adapter.submitList(taskList)
+        }
+        override fun onClickEdit(task: Task) {
+            var intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra("previousTask", task)
+            editTask.launch(intent)
+            adapter.submitList(taskList)
+        }
+
+        override fun onClickTask(desc: String) {
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, desc)
+                type = "text/plain"
+            }
+
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
+        }
+    }
+    private val adapter = TaskListAdapter(adapterListener)
     private var _binding: FragmentTaskListBinding? = null
     val createTask = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         // dans cette callback on récupèrera la task et on l'ajoutera à la liste
@@ -38,6 +63,14 @@ class TaskListFragment : Fragment() {
         adapter.submitList(taskList)
     }
 
+    val editTask = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        // dans cette callback on récupèrera la task et on remplacera au bon endroit
+        val task = result.data?.getSerializableExtra("task") as Task?
+        if (task != null) {
+            taskList = taskList.map { if (it.id == task.id) task else it }
+        }
+        adapter.submitList(taskList)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,17 +78,6 @@ class TaskListFragment : Fragment() {
         arguments?.let {
         }
 
-        //var button = view?.findViewById(R.id.floatingActionButton) as FloatingActionButton
-
-/*
-        button.setOnClickListener{
-
-            val newTask = Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}")
-            taskList = taskList + newTask
-            adapter.currentList = taskList
-            adapter.notifyDataSetChanged()
-            */
-       // }
     }
 
 
@@ -74,14 +96,8 @@ class TaskListFragment : Fragment() {
         val recyclerView = _binding?.recycler
         recyclerView?.adapter = adapter
 
-        adapter.onClickDelete = { task ->
-            /*
-            taskList = taskList.subList(0, taskList.indexOf(task)-1) + taskList.subList(taskList.indexOf(task)+ 1, taskList.size - 1)
-            adapter.submitList(taskList)
-             */
-            taskList = taskList.minus(task)
-            adapter.submitList(taskList)
-        }
+        val array : Array<Task>? = savedInstanceState?.getSerializable("tasks") as? Array<Task>
+        if (array !=null ) taskList = array.asList()
         adapter.submitList(taskList)
         val button : FloatingActionButton? = _binding?.floatingActionButton
         button?.setOnClickListener {
@@ -91,6 +107,11 @@ class TaskListFragment : Fragment() {
         }
 
 
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val array = taskList.toTypedArray()
+        outState.putSerializable("tasks", array)
     }
 
     companion object {

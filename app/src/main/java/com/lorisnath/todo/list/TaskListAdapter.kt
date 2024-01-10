@@ -17,26 +17,28 @@ object MyItemsDiffCallback : DiffUtil.ItemCallback<Task>() {
     }
 
     override fun areContentsTheSame(oldItem: Task, newItem: Task) : Boolean {
-        return oldItem.id == newItem.id // comparaison: est-ce le même "contenu" ? => mêmes valeurs? (avec data class: simple égalité)
+        return oldItem == newItem // comparaison: est-ce le même "contenu" ? => mêmes valeurs? (avec data class: simple égalité)
     }
 }
 
-class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(MyItemsDiffCallback) {
+class TaskListAdapter(val listener: TaskListListener) : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(MyItemsDiffCallback) {
 
     // on utilise `inner` ici afin d'avoir accès aux propriétés de l'adapter directement
-    var onClickDelete: (Task) -> Unit = {}
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private var textView : TextView = itemView.findViewById(R.id.task_title)
         private var descView : TextView = itemView.findViewById(R.id.task_description)
         private var deleteButton : ImageButton = itemView.findViewById(R.id.imageButton2)
+        private var editButton : ImageButton = itemView.findViewById(R.id.editButton)
 
 
-        fun bind(taskTitle: Task) {
+        fun bind(task: Task) {
             // on affichera les données ici
-            textView.text = taskTitle.title
-            descView.text = taskTitle.description
-            deleteButton.setOnClickListener { onClickDelete(taskTitle) }
+            textView.text = task.title
+            descView.text = task.description
+            deleteButton.setOnClickListener { listener.onClickDelete(task) }
+            editButton.setOnClickListener { listener.onClickEdit(task) }
+            itemView.setOnLongClickListener {listener.onClickTask(task.description); true}
         }
     }
 
