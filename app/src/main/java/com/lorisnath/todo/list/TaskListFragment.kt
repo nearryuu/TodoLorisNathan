@@ -60,13 +60,17 @@ class TaskListFragment : Fragment() {
     val createTask = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         // dans cette callback on récupèrera la task et on l'ajoutera à la liste
         val task = result.data?.getSerializableExtra("task") as Task?
-        viewModel.add(task!!)
+        if (task != null) {
+            viewModel.add(task)
+        }
     }
 
     val editTask = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         // dans cette callback on récupèrera la task et on remplacera au bon endroit
         val task = result.data?.getSerializableExtra("task") as Task?
-        viewModel.update(task!!)
+        if (task != null) {
+            viewModel.update(task)
+        }
     }
 
 

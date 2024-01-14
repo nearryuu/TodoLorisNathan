@@ -10,4 +10,4 @@ data class Task(
     @SerialName("content")
     val title: String,
     @SerialName("description")
-    val description: String = "no description") : java.io.Serializable
+    val description: String = "") : java.io.Serializable

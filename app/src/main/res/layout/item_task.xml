@@ -12,32 +12,30 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@android:color/holo_blue_bright"
-        app:layout_constraintBottom_toTopOf="@+id/imageButton2"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/editButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/imageButton2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="9dp"
-        app:layout_constraintBottom_toTopOf="@+id/task_description"
+        android:contentDescription="desc"
+        app:layout_constraintBottom_toBottomOf="@+id/task_description"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/task_title"
-        app:srcCompat="@android:drawable/ic_delete"
-        android:contentDescription="desc" />
+        app:layout_constraintTop_toTopOf="@+id/task_title"
+        app:srcCompat="@android:drawable/ic_delete" />
 
     <TextView
         android:id="@+id/task_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@android:color/holo_blue_bright"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/editButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton2" />
+        app:layout_constraintTop_toBottomOf="@+id/task_title" />
 
     <ImageButton
         android:id="@+id/editButton"
@@ -45,9 +43,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="9dp"
         android:contentDescription="Edit"
-        app:layout_constraintBottom_toTopOf="@+id/task_description"
+        app:layout_constraintBottom_toBottomOf="@+id/task_description"
         app:layout_constraintEnd_toStartOf="@+id/imageButton2"
-        app:layout_constraintTop_toBottomOf="@+id/task_title"
+        app:layout_constraintTop_toTopOf="@+id/task_title"
         app:srcCompat="@android:drawable/ic_menu_edit" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

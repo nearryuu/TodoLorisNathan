@@ -34,7 +34,7 @@ class TasksListViewModel : ViewModel() {
             }
 
             val addedTask = response.body()!!
-            tasksStateFlow.value = tasksStateFlow.value + addedTask
+            if (!tasksStateFlow.value.contains(addedTask)) tasksStateFlow.value = tasksStateFlow.value + addedTask
         }
     }
     fun update(task: Task) {

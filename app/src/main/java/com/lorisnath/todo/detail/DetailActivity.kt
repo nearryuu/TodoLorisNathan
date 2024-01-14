@@ -69,11 +69,14 @@ fun Detail( initialTask : Task?, modifier: Modifier = Modifier, onValidate: (Tas
         modifier = modifier,
         style = MaterialTheme.typography.titleLarge
     )
+        Text(text = "")
+        Text(text = "Title :")
         OutlinedTextField(
             value = task.title,
             modifier = modifier,
             onValueChange = {task = task.copy(title = it)}
         )
+        Text(text = "Description :")
         OutlinedTextField(
             value = task.description,
             modifier = modifier,
